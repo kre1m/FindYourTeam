@@ -301,10 +301,7 @@ async def choose_experience_filter(message: Message, state: FSMContext):
 
 @dp.message(FilterStates.choosing_filters, F.text == "📷 Наличие фотографии")
 async def choose_photo_filter(message: Message, state: FSMContext):
-    await message.answer("Выберите 'Да' для поиска с фото или 'Нет' для без фото:",
-                         reply_markup=ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Да"),
-                                                                     KeyboardButton(text="Нет")]],
-                                                          resize_keyboard=True))
+    await message.answer("Выберите 'Да' для поиска с фото или 'Нет' для без фото:")
     await state.set_state(FilterStates.filter_photo)
 
 @dp.message(FilterStates.choosing_filters, F.text.in_(["✅ Старт", "Старт"]))

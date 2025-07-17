@@ -8,5 +8,5 @@ def delete_profile(user_id):
     conn.close()
 
 # Замените на нужный user_id
-delete_profile(1200771014)
+delete_profile(975554054)
 print("Анкета удалена.")
