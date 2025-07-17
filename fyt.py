@@ -57,6 +57,7 @@ async def confirmed_consent(message: Message, state: FSMContext):
     await state.clear()
 
 
+
 @dp.message(F.text == "/register")
 async def start_register(message: Message, state: FSMContext):
     if get_profile(message.from_user.id):
