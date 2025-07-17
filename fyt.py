@@ -382,6 +382,17 @@ async def start_filtered_search(message: Message, state: FSMContext, filters: di
 async def show_next_filtered_profile(user_id: int, message: Message, state: FSMContext, filters: dict):
     data = await state.get_data()
     seen_ids = data.get('seen_ids', [])
+    last_msg_id = data.get('last_filtered_profile_msg_id')
+
+    if last_msg_id:
+        try:
+            await message.bot.edit_message_reply_markup(
+                chat_id=message.chat.id,
+                message_id=last_msg_id,
+                reply_markup=None
+            )
+        except:
+            pass
 
     exclude_ids = seen_ids + [user_id]
 
@@ -413,9 +424,10 @@ async def show_next_filtered_profile(user_id: int, message: Message, state: FSMC
 
     markup = get_search_inline_keyboard(profile[0])
     if photo_id:
-        await message.answer_photo(photo_id, caption=caption, reply_markup=markup)
+        sent_msg = await message.answer_photo(photo_id, caption=caption, reply_markup=markup)
     else:
-        await message.answer(caption, reply_markup=markup)
+        sent_msg = await message.answer(caption, reply_markup=markup)
+    await state.update_data(last_filtered_profile_msg_id=sent_msg.message_id)
 
 @dp.message(F.text == "💤 Перерыв")
 async def back_to_menu(message: Message, state: FSMContext):
