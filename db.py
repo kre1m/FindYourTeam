@@ -113,7 +113,7 @@ def get_profiles_by_filters(city=None, experience=None, has_photo=None, exclude_
         query += f" AND user_id NOT IN ({placeholders})"
         params.extend(exclude_ids)
 
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.execute(query, params)
     results = cursor.fetchall()
     conn.close()
