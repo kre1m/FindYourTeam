@@ -72,9 +72,13 @@ async def get_name(message: Message, state: FSMContext):
         return await cancel_registration(message, state)
     await state.update_data(name=message.text)
     if get_profile(message.from_user.id):
-        await message.answer("Из какого вы города?",  reply_markup=register_menu)
+        await message.answer("Из какого вы города?\nПожалуйста, указывайте точное название города с заглавной буквы "
+                             "- это поможет вашим потенциальным напарникам быстрее найти вас!",
+                             reply_markup=register_menu)
     else:
-        await message.answer("Из какого вы города?", reply_markup=ReplyKeyboardRemove())
+        await message.answer("Из какого вы города?\nПожалуйста, указывайте точное название города с заглавной буквы "
+                             "- это поможет вашим потенциальным напарникам быстрее найти вас!",
+                             reply_markup=ReplyKeyboardRemove())
     await state.set_state(RegisterStates.city)
 
 @dp.message(RegisterStates.city)
