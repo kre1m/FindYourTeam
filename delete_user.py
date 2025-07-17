@@ -1,7 +1,7 @@
 import sqlite3
 
 def delete_profile(user_id):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("DELETE FROM profiles WHERE user_id = ?", (user_id,))
     conn.commit()

@@ -1,7 +1,7 @@
 # db.py
 import sqlite3
 def init_db():
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS profiles (
@@ -19,7 +19,7 @@ def init_db():
     conn.close()
 
 def save_profile(user_id, name, city, skills, looking_for, experience, description, photo_id=None):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("""
         INSERT OR REPLACE INTO profiles (user_id, name, city, skills, looking_for, experience, description, photo_id)
@@ -29,7 +29,7 @@ def save_profile(user_id, name, city, skills, looking_for, experience, descripti
     conn.close()
 
 def get_profile(user_id):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM profiles WHERE user_id = ?", (user_id,))
     profile = cursor.fetchone()
@@ -37,14 +37,14 @@ def get_profile(user_id):
     return profile
 
 def update_photo(user_id, photo_id):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("UPDATE profiles SET photo_id = ? WHERE user_id = ?", (photo_id, user_id))
     conn.commit()
     conn.close()
 
 def get_random_profile(exclude_user_id: int):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute(
         "SELECT * FROM profiles "
@@ -60,7 +60,7 @@ def get_random_profile(exclude_user_id: int):
 
 
 def get_unseen_profile(exclude_user_id: int, seen_ids: list):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
 
     if not seen_ids:
@@ -92,7 +92,7 @@ def get_unseen_profile(exclude_user_id: int, seen_ids: list):
     return profile
 
 def get_profile_by_id(user_id: int):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM profiles WHERE user_id = ?", (user_id,))
     profile = cursor.fetchone()
@@ -100,7 +100,7 @@ def get_profile_by_id(user_id: int):
     return profile
 
 def delete_profile(user_id):
-    conn = sqlite3.connect("profiles.db")
+    conn = sqlite3.connect("/data/profiles.db")
     cursor = conn.cursor()
     cursor.execute("DELETE FROM profiles WHERE user_id = ?", (user_id,))
     conn.commit()
