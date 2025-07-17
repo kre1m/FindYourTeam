@@ -9,7 +9,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKey
 from aiogram.client.default import DefaultBotProperties
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from states import RegisterStates, PhotoUpdateState, SearchStates, FilterStates, DeleteStates
-from db import init_db, save_profile, get_profile, update_photo, get_random_profile, get_unseen_profile, \
+from db import init_db, save_profile, get_profile, update_photo, get_unseen_profile, \
     get_profile_by_id, delete_profile, get_profiles_by_filters
 from aiogram.types import CallbackQuery
 

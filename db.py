@@ -43,21 +43,6 @@ def update_photo(user_id, photo_id):
     conn.commit()
     conn.close()
 
-def get_random_profile(exclude_user_id: int):
-    conn = sqlite3.connect("/data/profiles.db")
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT * FROM profiles "
-        "WHERE user_id != ? "
-        "AND name IS NOT NULL "  # Теперь комментарий вне строки запроса
-        "ORDER BY RANDOM() "
-        "LIMIT 1",
-        (exclude_user_id,)
-    )
-    profile = cursor.fetchone()
-    conn.close()
-    return profile
-
 
 def get_unseen_profile(exclude_user_id: int, seen_ids: list):
     conn = sqlite3.connect("/data/profiles.db")
