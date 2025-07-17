@@ -459,6 +459,16 @@ async def show_next_profile(user_id: int, message: Message, state: FSMContext):
     seen_ids = data.get('seen_ids', [])
     profile = get_unseen_profile(user_id, seen_ids)
     if not profile:
+        previous_msg_id = data.get("last_profile_msg_id")
+        if previous_msg_id:
+            try:
+                await bot.edit_message_reply_markup(
+                    chat_id=message.chat.id,
+                    message_id=previous_msg_id,
+                    reply_markup=None
+                )
+            except Exception as e:
+                print(f"Не удалось удалить кнопки последней анкеты: {e}")
         await message.answer("😢 Просмотрены все анкеты. Возвращение в главное меню.", reply_markup=main_menu)
         await state.clear()
         return
@@ -489,6 +499,19 @@ async def show_next_profile(user_id: int, message: Message, state: FSMContext):
     else:
         sent_msg = await message.answer(caption, reply_markup=markup)
     await state.update_data(last_profile_msg_id=sent_msg.message_id)
+
+async def remove_last_profile_buttons(message: Message, state: FSMContext, key: str):
+    data = await state.get_data()
+    last_msg_id = data.get(key)
+    if last_msg_id:
+        try:
+            await message.bot.edit_message_reply_markup(
+                chat_id=message.chat.id,
+                message_id=last_msg_id,
+                reply_markup=None
+            )
+        except Exception as e:
+            print(f"Не удалось удалить кнопки: {e}")
 
 def get_search_inline_keyboard(profile_id: int):
     return InlineKeyboardMarkup(inline_keyboard=[
