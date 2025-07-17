@@ -294,29 +294,46 @@ async def choose_city_filter(message: Message, state: FSMContext):
     await message.answer("Введите название города:")
     await state.set_state(FilterStates.filter_city)
 
+async def block_if_city_required(state: FSMContext, message: Message) -> bool:
+    current_state = await state.get_state()
+    if current_state == FilterStates.filter_city:
+        await message.answer("❗ Пожалуйста, укажите точное название города с заглавной буквы!")
+        return True
+    return False
+
 @dp.message(FilterStates.choosing_filters, F.text == "📚 Стаж")
 async def choose_experience_filter(message: Message, state: FSMContext):
+    if await block_if_city_required(state, message):
+        return
     await message.answer("Введите минимальный стаж (число лет):")
     await state.set_state(FilterStates.filter_experience)
 
 @dp.message(FilterStates.choosing_filters, F.text == "📷 Наличие фотографии")
 async def choose_photo_filter(message: Message, state: FSMContext):
+    if await block_if_city_required(state, message):
+        return
     await message.answer("Выберите 'Да' для поиска с фото или 'Нет' для без фото:")
     await state.set_state(FilterStates.filter_photo)
 
 @dp.message(FilterStates.choosing_filters, F.text.in_(["✅ Старт", "Старт"]))
 async def start_filtering(message: Message, state: FSMContext):
+    if await block_if_city_required(state, message):
+        return
     data = await state.get_data()
     filters = data.get('filters', {})
     await start_filtered_search(message, state, filters)
 
 @dp.message(FilterStates.choosing_filters, F.text.in_(["🔄 Сброс", "Сброс"]))
 async def reset_filters(message: Message, state: FSMContext):
+    if await block_if_city_required(state, message):
+        return
     await state.update_data(filters={})
     await message.answer("Фильтры сброшены. Выберите фильтр или нажмите 'Старт'.")
 
 @dp.message(FilterStates.choosing_filters, F.text.in_(["💤 Перерыв", "Перерыв"]))
 async def cancel_filtering(message: Message, state: FSMContext):
+    if await block_if_city_required(state, message):
+        return
     await state.clear()
     await message.answer("💤 Перерыв. Возвращение в главное меню.", reply_markup=main_menu)
 
@@ -440,6 +457,7 @@ async def show_next_profile(user_id: int, message: Message, state: FSMContext):
     profile = get_unseen_profile(user_id, seen_ids)
     if not profile:
         await message.answer("😢 Просмотрены все анкеты. Возвращение в главное меню.", reply_markup=main_menu)
+        await state.clear()
         return
 
     seen_ids.append(profile[0])

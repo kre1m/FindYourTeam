@@ -79,7 +79,7 @@ def get_unseen_profile(exclude_user_id: int, seen_ids: list):
         query = f"""
             SELECT * FROM profiles 
             WHERE user_id != ? 
-            AND user_id NOT IN ({placeholders})
+            AND id NOT IN ({placeholders})
             AND name IS NOT NULL
             ORDER BY RANDOM() 
             LIMIT 1
