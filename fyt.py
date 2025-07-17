@@ -38,6 +38,7 @@ search_menu = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
+
 @dp.message(F.text == "/start")
 async def cmd_start(message: Message):
     if get_profile(message.from_user.id):
