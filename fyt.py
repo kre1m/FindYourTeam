@@ -73,11 +73,11 @@ async def get_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     if get_profile(message.from_user.id):
         await message.answer("Из какого вы города?\nПожалуйста, указывайте точное название города с заглавной буквы "
-                             "- это поможет вашим потенциальным напарникам быстрее найти вас!",
+                             "- это поможет потенциальным напарникам быстрее найти вас!",
                              reply_markup=register_menu)
     else:
         await message.answer("Из какого вы города?\nПожалуйста, указывайте точное название города с заглавной буквы "
-                             "- это поможет вашим потенциальным напарникам быстрее найти вас!",
+                             "- это поможет потенциальным напарникам быстрее найти вас!",
                              reply_markup=ReplyKeyboardRemove())
     await state.set_state(RegisterStates.city)
 
@@ -107,21 +107,6 @@ async def get_skills(message: Message, state: FSMContext):
         await message.answer("Кого вы ищете в команду?", reply_markup=ReplyKeyboardRemove())
     await state.set_state(RegisterStates.looking_for)
 
-# @dp.message(RegisterStates.looking_for)
-# async def get_target(message: Message, state: FSMContext):
-#     if message.text == "🚫 Отмена":
-#         return await cancel_registration(message, state)
-#     if not message.text:
-#         return await message.answer("Пожалуйста, укажите, кого вы ищете, текстом.")
-#     await state.update_data(looking_for=message.text)
-#     if get_profile(message.from_user.id):
-#         await message.answer("📷 Прикрепите фото для анкеты или напишите /skip, чтобы пропустить этот шаг.",
-#                          reply_markup=register_menu)
-#     else:
-#         await message.answer("📷 Прикрепите фото для анкеты или напишите /skip, чтобы пропустить этот шаг.",
-#                              reply_markup=ReplyKeyboardRemove())
-#     await state.set_state(RegisterStates.photo_id)
-
 @dp.message(RegisterStates.looking_for)
 async def get_target(message: Message, state: FSMContext):
     if message.text == "🚫 Отмена":
@@ -130,9 +115,13 @@ async def get_target(message: Message, state: FSMContext):
         return await message.answer("Пожалуйста, укажите, кого вы ищете, текстом.")
     await state.update_data(looking_for=message.text)
     if get_profile(message.from_user.id):
-        await message.answer("Сколько у вас лет опыта? (Введите цифру/число)", reply_markup=register_menu)
+        await message.answer("Сколько у вас лет опыта? (Введите цифру/число)\nПожалуйста, указывайте ваш "
+                             "реальный опыт - это поможет потенциальным напарникам быстрее найти вас!",
+                             reply_markup=register_menu)
     else:
-        await message.answer("Сколько у вас лет опыта? (Введите цифру/число)", reply_markup=ReplyKeyboardRemove())
+        await message.answer("Сколько у вас лет опыта? (Введите цифру/число)\nПожалуйста, указывайте ваш "
+                             "реальный опыт - это поможет потенциальным напарникам быстрее найти вас!",
+                             reply_markup=ReplyKeyboardRemove())
     await state.set_state(RegisterStates.experience)
 
 
