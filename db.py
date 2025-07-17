@@ -106,6 +106,7 @@ def delete_profile(user_id):
     conn.commit()
     conn.close()
 
+
 def get_profiles_by_filters(city=None, experience=None, has_photo=None, exclude_ids=None):
     exclude_ids = exclude_ids or []
     query = "SELECT * FROM profiles WHERE 1=1"
