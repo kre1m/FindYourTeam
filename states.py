@@ -22,3 +22,6 @@ class FilterStates(StatesGroup):
     filter_photo = State()
     confirming_filters = State()
     searching = State()
+
+class DeleteStates(StatesGroup):
+    confirm_delete = State()

@@ -8,7 +8,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKey
     InlineKeyboardMarkup
 from aiogram.client.default import DefaultBotProperties
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
-from states import RegisterStates, PhotoUpdateState, SearchStates, FilterStates
+from states import RegisterStates, PhotoUpdateState, SearchStates, FilterStates, DeleteStates
 from db import init_db, save_profile, get_profile, update_photo, get_random_profile, get_unseen_profile, \
     get_profile_by_id, delete_profile, get_profiles_by_filters
 from aiogram.types import CallbackQuery
@@ -650,17 +650,20 @@ async def skip_profile(callback: CallbackQuery, state: FSMContext):
     await show_next_profile(callback.from_user.id, callback.message, state)
 
 @dp.message(F.text == "🗑 Удалить анкету")
-async def delete_user_profile(message: Message):
+async def delete_user_profile(message: Message, state: FSMContext):
     await message.answer("Подтвердите удаление анкеты",
                          reply_markup=ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="✅ Подтвердить"),
                                                                     KeyboardButton(text="🚫 Отмена")]],
                                                           resize_keyboard=True))
+    await state.set_state(DeleteStates.confirm_delete)
 
 @dp.message(F.text == "✅ Подтвердить")
-async def confirmed_consent(message: Message):
+async def confirmed_consent(message: Message, state: FSMContext):
     delete_profile(message.from_user.id)
+    await state.clear()
     await message.answer("Ваша анкета была удалена. Для возобновления использования бота напишите /start.",
                          reply_markup=ReplyKeyboardRemove())
+
 async def main():
     await dp.start_polling(bot)
 
